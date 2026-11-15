@@ -42,7 +42,7 @@ export default function CheckoutPage() {
         <div className="notice">
           {result.demo
             ? "זו גרסת תצוגה: ההזמנה לא נשלחה ולא נשמרה, ולא בוצע חיוב."
-            : "מצב פיתוח: ההזמנה נשמרה, אך עדיין לא מחובר שירות סליקה. ראה את README לחיבור תשלום אמיתי."}
+            : "ההזמנה נשמרה וממתינה לתשלום. חיבור Grow עדיין לא הוגדר, אז לא בוצע חיוב."}
         </div>
         <p><Link href="/" className="btn">חזרה לחנות</Link></p>
       </>
@@ -98,11 +98,12 @@ export default function CheckoutPage() {
 
   return (
     <>
+      <p className="eyebrow">קופה</p>
       <h1>פרטי משלוח ותשלום</h1>
       {STATIC_DEMO && (
         <div className="notice">גרסת תצוגה: אין שליחת הזמנה ואין חיוב. אל תזין פרטים אמיתיים.</div>
       )}
-      <p>סה״כ לתשלום: <strong>{formatPrice(total)}</strong></p>
+      <div className="checkout">
       <form className="form" onSubmit={submit}>
         {FIELDS.map((f) => (
           <div className="field" key={f.k}>
@@ -130,6 +131,24 @@ export default function CheckoutPage() {
         {error && <div className="error" role="alert">{error}</div>}
         <button className="btn" disabled={busy}>{busy ? "שולח..." : "המשך לתשלום"}</button>
       </form>
+      <aside className="summary" aria-label="סיכום הזמנה">
+        <h2>ההזמנה</h2>
+        {lines.map((line) => (
+          <div className="summary-line" key={line.id}>
+            <span>{line.product.name} × {line.qty}</span>
+            <span>{formatPrice(line.product.price * line.qty)}</span>
+          </div>
+        ))}
+        <div className="summary-line">
+          <span>משלוח</span>
+          <span>{shippingFor(subtotal) === 0 ? "חינם" : formatPrice(shippingFor(subtotal))}</span>
+        </div>
+        <div className="summary-line summary-total">
+          <strong>סה״כ</strong>
+          <strong>{formatPrice(total)}</strong>
+        </div>
+      </aside>
+      </div>
     </>
   );
 }
