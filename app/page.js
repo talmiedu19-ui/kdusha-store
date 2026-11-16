@@ -12,7 +12,7 @@ export default function Home() {
         <div>
           <p className="eyebrow">מוצרי קדושה נבחרים</p>
           <h1>קדושה בעיצוב מוקפד</h1>
-          <p className="lead">
+          <p>
             מוצרי קדושה אלגנטיים לבית שלך, ומתנה מושלמת לחנוכת בית, לחתונה ולכל אירוע.
           </p>
           <div className="hero-actions">

@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
+import { promises as fs } from "fs";
+import path from "path";
 import { getProduct, shippingFor } from "@/data/products";
-import { saveOrder, updateOrder } from "@/lib/orders";
-import { createGrowPayment, growConfigured } from "@/lib/grow";
-import { siteUrl } from "@/lib/site";
 
+// שרת: מחשב מחדש את המחירים (לא סומכים על הדפדפן), שומר הזמנה לקובץ,
+// ובהמשך יוצר דף תשלום בחברת הסליקה.
 export async function POST(req) {
   let body;
   try {
@@ -43,6 +44,7 @@ export async function POST(req) {
   const shipping = shippingFor(subtotal);
   const total = subtotal + shipping;
   const orderId = `ORD-${Date.now()}`;
+
   const order = {
     orderId,
     createdAt: new Date().toISOString(),
@@ -65,36 +67,22 @@ export async function POST(req) {
     total,
   };
 
+  // שלב זמני: שמירה לקובץ מקומי. בפריסה ל-Vercel יש להחליף במסד נתונים (ראה README).
   try {
-    await saveOrder(order);
+    const file = path.join(process.cwd(), "orders.json");
+    let all = [];
+    try {
+      all = JSON.parse(await fs.readFile(file, "utf8"));
+    } catch {}
+    all.push(order);
+    await fs.writeFile(file, JSON.stringify(all, null, 2));
   } catch (err) {
     console.error("Could not save order", err);
-    return NextResponse.json({ error: "לא הצלחנו לשמור את ההזמנה. נסו שוב בעוד רגע." }, { status: 500 });
   }
 
-  if (!growConfigured()) {
-    return NextResponse.json({ ok: true, orderId, total, paymentUrl: null });
-  }
+  // TODO (שלב התשלום): ליצור כאן דף תשלום בחברת הסליקה שבחרת
+  // ולהחזיר את הכתובת שלו ב-paymentUrl. ראה README, שלב 7.
+  const paymentUrl = null;
 
-  const origin = siteUrl(req);
-  try {
-    const payment = await createGrowPayment({
-      order,
-      successUrl: `${origin}/checkout/success?order=${encodeURIComponent(orderId)}`,
-      cancelUrl: `${origin}/checkout/cancel?order=${encodeURIComponent(orderId)}`,
-      notifyUrl: `${origin}/api/payment/grow`,
-    });
-    await updateOrder(orderId, {
-      paymentProvider: "grow",
-      paymentProcessId: payment.processId,
-      paymentProcessToken: payment.processToken,
-    });
-    return NextResponse.json({ ok: true, orderId, total, paymentUrl: payment.url });
-  } catch (err) {
-    console.error("Grow payment failed", err);
-    return NextResponse.json(
-      { error: "ההזמנה נשמרה, אבל לא הצלחנו לפתוח את דף התשלום. נסו שוב או פנו אלינו." },
-      { status: 502 }
-    );
-  }
+  return NextResponse.json({ ok: true, orderId, total, paymentUrl });
 }

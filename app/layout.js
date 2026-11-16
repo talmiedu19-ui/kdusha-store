@@ -20,17 +20,9 @@ export const metadata = {
 
 export const viewport = { themeColor: "#0b0b0c" };
 
-// עיצוב ברירת מחדל: "light" (לבן-זהב) או "dark" (שחור-זהב).
-// הגולש יכול להחליף במתג שבכותרת, והבחירה נשמרת בדפדפן שלו.
-const DEFAULT_THEME = "light";
-const THEME_SCRIPT = `(function(){var t=${JSON.stringify(DEFAULT_THEME)};try{t=localStorage.getItem("theme")||t}catch(e){}document.documentElement.setAttribute("data-theme",t)})();`;
-
 export default function RootLayout({ children }) {
   return (
-    <html lang="he" dir="rtl" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
-      </head>
+    <html lang="he" dir="rtl">
       <body className={`${sans.variable} ${serif.variable}`}>
         <a href="#main" className="skip-link">דלג לתוכן הראשי</a>
         <div className="announce">משלוח חינם בקנייה מעל {formatPrice(FREE_SHIPPING_FROM)}</div>

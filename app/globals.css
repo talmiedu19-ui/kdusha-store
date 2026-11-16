@@ -189,29 +189,6 @@ main.container { padding-top: 32px; padding-bottom: 72px; min-height: 70vh; outl
 .a11y-opt[aria-pressed="true"] { background: #1a5fd0; color: #fff; }
 .a11y-opt:disabled { opacity: .5; cursor: not-allowed; }
 
-/* ---------- מתג עיצוב (כהה / לבן-זהב) ---------- */
-.theme-btn { min-width: 40px; min-height: 40px; border-radius: 999px; border: 1px solid #8a8578; background: transparent; color: var(--ink); cursor: pointer; font-size: 1.1rem; line-height: 1; }
-.theme-btn:hover { border-color: var(--gold); }
-
-/* ---------- עיצוב בהיר: לבן וזהב ---------- */
-html[data-theme="light"] {
-  --bg: #fbf8f2; --surface: #ffffff; --ink: #1d1a14; --muted: #6b6455;
-  --gold: #c9a96a; --gold-strong: #7a5a14; --line: #e6dfcf;
-}
-html[data-theme="light"] .header { background: rgba(255,255,255,.92); }
-html[data-theme="light"] .logo, html[data-theme="light"] .eyebrow { color: var(--gold-strong); }
-html[data-theme="light"] .btn:hover { background: #d9bb7e; }
-html[data-theme="light"] .hero-media { background: radial-gradient(circle at 50% 40%, #ffffff, #efe6d2 75%); }
-html[data-theme="light"] .card-img, html[data-theme="light"] .thumb { background: #f3ede0; }
-html[data-theme="light"] .ph { background: radial-gradient(circle at 50% 40%, #fffaf0, #eadfc6 70%); }
-html[data-theme="light"] .footer { background: #f1eadb; }
-html[data-theme="light"] .sale-tag { border: 1px solid #1d1a14; }
-html[data-theme="light"] .error { color: #b00020; }
-html[data-theme="light"] .chip, html[data-theme="light"] .qty button,
-html[data-theme="light"] .form input, html[data-theme="light"] .form textarea,
-html[data-theme="light"] .filters select, html[data-theme="light"] .shop-bar select { border-color: #8a8578; }
-html[data-theme="light"] .card:hover { box-shadow: 0 10px 30px rgba(122,90,20,.12); }
-
 /* מצבי נגישות שמופעלים על ה-html */
 html.a11y-gray body { filter: grayscale(1); }
 html.a11y-links a { text-decoration: underline !important; font-weight: 700; }

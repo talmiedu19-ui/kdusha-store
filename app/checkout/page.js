@@ -21,9 +21,6 @@ const EMPTY = {
   houseNumber: "", apartment: "", zip: "", notes: "",
 };
 
-// באתר סטטי (GitHub Pages) אין שרת, ולכן הצ'קאאוט עובד במצב הדגמה בלבד
-const STATIC_DEMO = process.env.NEXT_PUBLIC_STATIC === "1";
-
 export default function CheckoutPage() {
   const { items, clear, loaded } = useCart();
   const [form, setForm] = useState(EMPTY);
@@ -40,9 +37,8 @@ export default function CheckoutPage() {
         <p>מספר הזמנה: <strong>{result.orderId}</strong></p>
         <p>סכום: {formatPrice(result.total)}</p>
         <div className="notice">
-          {result.demo
-            ? "זו גרסת תצוגה: ההזמנה לא נשלחה ולא נשמרה, ולא בוצע חיוב."
-            : "מצב פיתוח: ההזמנה נשמרה, אך עדיין לא מחובר שירות סליקה. ראה את README לחיבור תשלום אמיתי."}
+          מצב פיתוח: ההזמנה נשמרה, אך עדיין לא מחובר שירות סליקה.
+          ראה את README לחיבור תשלום אמיתי.
         </div>
         <p><Link href="/" className="btn">חזרה לחנות</Link></p>
       </>
@@ -66,10 +62,6 @@ export default function CheckoutPage() {
 
   async function submit(e) {
     e.preventDefault();
-    if (STATIC_DEMO) {
-      setResult({ orderId: "תצוגה", total, demo: true });
-      return;
-    }
     setBusy(true);
     setError("");
     try {
@@ -99,9 +91,6 @@ export default function CheckoutPage() {
   return (
     <>
       <h1>פרטי משלוח ותשלום</h1>
-      {STATIC_DEMO && (
-        <div className="notice">גרסת תצוגה: אין שליחת הזמנה ואין חיוב. אל תזין פרטים אמיתיים.</div>
-      )}
       <p>סה״כ לתשלום: <strong>{formatPrice(total)}</strong></p>
       <form className="form" onSubmit={submit}>
         {FIELDS.map((f) => (
